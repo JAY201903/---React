@@ -1,94 +1,80 @@
 import React, { Component } from "react";
 import { ClasssBox } from "./style";
+import { classFiles } from "./const";
+
 export class Classshow extends Component {
+  constructor() {
+    super();
+    this.state = {
+      classData: classFiles,
+      onLeftSelect: "",
+      onRightShow: [],
+    };
+    // this.classOnclick = this.classOnclick.bind(this)
+  }
+  componentDidMount() {
+    console.log("classFiles", classFiles);
+    const res = classFiles;
+    const leftClass = res.keywordAreas[0].level1words[0];
+    var initOnSelect = leftClass.keyword;
+    var initRightClass = leftClass.level2words;
+    this.setState({
+      onLeftSelect: initOnSelect,
+      onRightShow: initRightClass,
+    });
+  }
+  // 左边的class点击事件
+  leftClassOnclick(selectClass, classDetail) {
+    this.setState({
+      onLeftSelect: selectClass,
+      onRightShow: classDetail,
+    });
+  }
   render() {
     return (
       <ClasssBox>
         <div className="leftArea">
+          {/* 左边的选项 */}
           <ul>
-            <li>
-              <div className="ico-mall list-tit">
-                <h3>IP</h3>
-              </div>
-              <ul>
-                <li className="">动漫</li>
-                <li className="cur">游戏</li>
-                <li className="">影视</li>
-                <li className="">综艺</li>
-              </ul>
-            </li>
-            <li>
-              <div className="ico-mall list-tit">
-                <h3>IP</h3>
-              </div>
-              <ul>
-                <li className="">动漫</li>
-                <li className="cur">游戏</li>
-                <li className="">影视</li>
-                <li className="">综艺</li>
-              </ul>
-            </li>
+            {this.state.classData.keywordAreas.map((item) => {
+              return(
+                <li key={item.areaId}>
+                  <div className="list-tit">
+                    <h3>{item.areaName}</h3>
+                  </div>
+                  <ul>
+                    {item.level1words.map((level1)=> {
+                      return (<li key={level1.keywordId} className={this.state.onLeftSelect === level1.keyword ? 'cur' : ''} onClick={this.leftClassOnclick.bind(this, level1.keyword, level1.level2words)}>{level1.keyword}</li>);
+                    })}
+                  </ul>
+                </li>
+              );
+            })}
           </ul>
         </div>
         <div className="rightArea">
           <ul className="good-list">
-            <li>
-              <a
-                href="http://localhost:3000/productlist?ip=408"
-                className="good-link"
-              >
-                <div className="good-imgbox">
-                  <img
-                    src="https://game.gtimg.cn/images/zb/x5/uploadImg/goods/201902/20190221181846_80761.jpg"
-                    className="good-img"
-                  />
-                </div>
-                <p className="good-name">绝地求生</p>
-              </a>
-            </li>
-            <li>
-              <a
-                href="http://localhost:3000/productlist?ip=408"
-                className="good-link"
-              >
-                <div className="good-imgbox">
-                  <img
-                    src="https://game.gtimg.cn/images/zb/x5/uploadImg/goods/201902/20190221181846_80761.jpg"
-                    className="good-img"
-                  />
-                </div>
-                <p className="good-name">绝地求生</p>
-              </a>
-            </li>
-            <li>
-              <a
-                href="http://localhost:3000/productlist?ip=408"
-                className="good-link"
-              >
-                <div className="good-imgbox">
-                  <img
-                    src="https://game.gtimg.cn/images/zb/x5/uploadImg/goods/201902/20190221181846_80761.jpg"
-                    className="good-img"
-                  />
-                </div>
-                <p className="good-name">绝地求生</p>
-              </a>
-            </li>
-            <li>
-              <a
-                href="http://localhost:3000/productlist?ip=408"
-                className="good-link"
-              >
-                <div className="good-imgbox">
-                  <img
-                    src="https://game.gtimg.cn/images/zb/x5/uploadImg/goods/201902/20190221181846_80761.jpg"
-                    className="good-img"
-                  />
-                </div>
-                <p className="good-name">绝地求生</p>
-              </a>
-            </li>
-            
+            {/* 右边的详情展示 */}
+            {
+              this.state.onRightShow.map(item =>{
+                return (
+                  <li key={item.keywordId}>
+                  <a
+                    href="http://localhost:3000/productlist?ip=408"
+                    className="good-link"
+                  >
+                    <div className="good-imgbox">
+                      <img
+                        src={item.imageUrl}
+                        className="good-img"
+                      />
+                    </div>
+                    <p className="good-name">{item.keyword}</p>
+                  </a>
+                </li>
+                )
+              })
+            }
           </ul>
         </div>
       </ClasssBox>
