@@ -1,14 +1,28 @@
-h2, h3, h4, h5, h6{
-    font-weight: 400;
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 400;
 }
-html,body,#root,.App {
-    height: 100%;
-    font-family: "Microsoft YaHei";
+html,
+body,
+#root,
+.App {
+  height: 100%;
+  font-family: "Microsoft YaHei";
 }
 body {
-    font-family: "Microsoft YaHei";
+  font-family: "Microsoft YaHei";
 }
 .ico-mall {
-    background: url(https://js01.daoju.qq.com/zb/v2/ico-mall.png) no-repeat;
-    background-size: 95vw 125vw;
-  }
+  background: url(https://js01.daoju.qq.com/zb/v2/ico-mall.png) no-repeat;
+  background-size: 95vw 125vw;
+}
+
+.hiddenElemrnt {
+    display: none!important;
+}
+.adm-toast-wrap-text{
+  font-size: 20px;
+}

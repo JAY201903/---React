@@ -1,99 +1,166 @@
 import styled from "styled-components";
 
-export const Noti = styled.div`
-  padding: 0 2.67vw 0 4vw;
-  height: 8.53vw;
-  background: #fff8e4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  .i-notice {
-    display: block;
-    width: 8.53vw;
-    height: 4.93vw;
-    background-position: -60vw -98vw;
+
+
+// 购物车页面
+export const CartPagewrap = styled.div`
+  height: 100%;
+  overflow-y: auto;
+`;
+export const CartListCss = styled.div`
+  width: 100%;
+  overflow: hidden;
+  background: #f3f4f6;
+  .cart-item {
+    margin-bottom: 1.33vw;
+    position: relative;
+    background: #fff;
+  }
+  .cart-item .item-hd {
+    display: flex;
+    align-items: center;
+    padding: 0 2.66vw;
+    height: 10.67vw;
+    position: relative;
+    &:after {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 1px;
+      content: " ";
+      transform: scaleY(0.5);
+      transform-origin: 0 100%;
+      border-bottom: 1px solid #eee;
+    }
   }
 
-  .swiperBox {
-    margin: 0 1.6vw;
-    height: 8.53vw;
+  .cart-item .item-hd .btn-check {
+    width: 5.87vw;
+    display: flex;
+    align-items: center;
+    i {
+      display: block;
+      width: 5.33vw;
+      height: 5.33vw;
+      background-position: -57.375vw -16.375vw;
+    }
+    .i-checked {
+      width: 5.6vw;
+      background-position: -77.625vw -16.125vw;
+    }
+  }
+  .cart-item .item-hd .item-hdimg {
+    margin-left: 2.93vw;
+    width: 6.4vw;
+    height: 6.4vw;
+    img {
+      display: block;
+      width: 6.4vw;
+      height: 6.4vw;
+    }
+  }
+  .cart-item .item-hd .item-hdname {
+    margin-left: 1.33vw;
+    margin-right: 1.33vw;
     box-sizing: border-box;
     flex: 1;
-    font-size: 2.4vw;
-    color: #333;
-    line-height: 6.4vw;
-    white-space: nowrap;
+    font-size: 3.47vw;
+    color: #383838;
     overflow: hidden;
-    display: flex;
-  }
-
-  .notiLink .ico-arrow {
-    display: block;
-    width: 3.33vw;
-    height: 2.93vw;
-    background-position: -13.625vw -17.25vw;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `;
 
-// 跑马灯区域  css
-export const SwiperBox = styled.div`
-  width: 100%;
-  height: auto;
-  position: relative;
-  .banning {
-    width: 100%;
-    height: auto;
-  }
-`;
-
-// tab
-export const IndexTab = styled.div`
-  width: 100%;
-  height: 24vw;
+// 结算
+export const CartBtnbox = styled.div`
+  height: 13.07vw;
   background: #fff;
-  ul {
+  position: relative;
+  &:before,
+  &:after {
+    position: absolute;
+    right: 0;
+    left: 0;
+    height: 1px;
+    content: " ";
+    z-index: 3;
+  }
+  &:before {
+    transform-origin: 0 0;
+    border-top: 1px solid #eee;
+    top: -1px;
+    transform: scaleY(0.5);
+  }
+  &:after {
+    transform: scaleY(0.5);
+    transform-origin: 0 100%;
+    border-bottom: 1px solid #eee;
+  }
+  .balance,
+  .balance .btn-check {
     display: flex;
-    justify-content: center;
-    flex-direction: row;
-    height: 100%;
-    text-align: center;
-    li {
-      width: 25%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
+    align-items: center;
+  }
+  .balance {
+    padding: 0 0 0 2.67vw;
+    height: 13.07vw;
+    .btn-check {
+      width: 5.87vw;
+      .i-check {
+        display: block;
+        width: 5.33vw;
+        height: 5.33vw;
+        background-position: -57.375vw -16.375vw;
+      }
+    }
+    .bal-txt {
+      padding-left: 1.07vw;
+      font-size: 3.2vw;
+      color: #333;
+    }
+    .totalpri {
       box-sizing: border-box;
       flex: 1;
-      flex-direction: column;
-      .tab-link {
-        width: 100%;
-        flex: auto;
-        flex-grow: 1;
-        display: flex;
-        box-sizing: border-box;
-        justify-content: center;
-        align-items: center;
-      }
-      .ico-tab {
-        display: block;
-        margin: 0 auto;
-        width: 11.73vw;
-        height: 11.73vw;
-      }
-      .tab-cell h5 {
-        color: #333;
-        font-size: 3.2vw;
+      padding: 2.67vw 2.4vw 0 0;
+      text-align: right;
+      .pri {
+        height: 3.33vw;
         line-height: 3.33vw;
-        margin-top: 2vw;
+        color: #383838;
+        font-size: 3.73vw;
+        .red {
+          color: #f7545f;
+          strong {
+            font-size: 4.53vw;
+            font-weight: 400;
+          }
+        }
       }
+      .pritip {
+        margin-top: 1.33vw;
+        font-size: 2.67vw;
+        color: #7c7c7c;
+      }
+    }
+    .btn-balance {
+      display: block;
+      width: 32vw;
+      height: 13.07vw;
+      line-height: 13.07vw;
+      text-align: center;
+      background: #ffd54f;
+      font-size: 3.73vw;
+      color: #333;
+      border-radius: 0;
     }
   }
 `;
 
-// 推荐转区
-export const GoodsListbox = styled.div`
-  position: relative;
-  padding-bottom: 10vw;
+// 推荐区
+export const CartRecommend = styled.div`
+  padding-bottom: 26.67vw;
   .listbox {
     padding: 0 2.67vw;
     margin-bottom: 1.73vw;
@@ -108,8 +175,8 @@ export const GoodsListbox = styled.div`
         color: #333;
         font-size: 4.8vw;
         position: relative;
-        &:before,
-        &:after {
+        :before,
+        :after {
           position: absolute;
           top: 1.33vw;
           width: 1.73vw;
@@ -125,38 +192,10 @@ export const GoodsListbox = styled.div`
         }
       }
     }
-  }
-  .goods-lists {
-    margin-top: 4vw;
-    margin-left: -1.33vw;
-    font-size: 0;
-  }
-
-  .ach-more {
-    width: 24vw;
-    height: 6.4vw;
-    position: relative;
-    display: block;
-    margin: 2.67vw auto;
-    font-size: 3.2vw;
-    color: #333;
-    div {
-      width: 24vw;
-      height: 6.4vw;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-indent: -4vw;
-      .ico-arrow {
-        position: absolute;
-        top: 1.87vw;
-        right: 0;
-        display: block;
-        width: 3.33vw;
-        height: 2.94vw;
-        background-position: -13.625vw -17.25vw;
-      }
+    .goods-list {
+      margin-top: 4vw;
+      margin-left: -1.33vw;
+      font-size: 0;
     }
   }
 `;
