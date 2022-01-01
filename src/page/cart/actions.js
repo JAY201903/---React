@@ -6,6 +6,8 @@ export const REVISED_TOTAL_PRICE = "REVISED_TOTAL_PRICE";
 export const DELETE_GOOD = "DELETE_GOOD";
 // 修改商品
 export const UPDATE_GOOD = "UPDATE_GOOD";
+// 更新购物车
+export const UPDATE_CART = "UPDATE_CART";
 
 export function selectOrCancelGood(selectGoodsList) {
   return {
@@ -15,7 +17,7 @@ export function selectOrCancelGood(selectGoodsList) {
     },
   };
 }
-export function RevisedTotalPrice(newTotalPrice) {
+export function revisedTotalPrice(newTotalPrice) {
   return {
     type: REVISED_TOTAL_PRICE,
     payload: {
@@ -41,3 +43,12 @@ export function updateGood(goodId) {
     },
   };
 }
+export function updateCart(cartList) {
+    return {
+      type: UPDATE_CART,
+      payload: {
+        cartList,
+      },
+    };
+  }
+  

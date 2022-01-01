@@ -1,32 +1,30 @@
 import React, { Component } from "react";
 import { ItemOrder } from "./style";
 import { Stepper, Toast } from "antd-mobile";
+import store  from '../../../../store/index';
+import {selectOrCancelGood} from '../../actions'
 export class Goods extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      good: this.props.goodsInfo,
-      num: this.props.total,
       isShowEdit: false,
-      maxBuyNum: this.props.maxBuyNum,
-      isCheck: this.props.isCheck,
     };
     this.onClickSelect = this.onClickSelect.bind(this)
+    this.attrRender = this.attrRender.bind(this)
   }
   numOnblur = () => {
     var inputNum = this.state.num;
-    console.log(inputNum);
     // 输入空值或空字符串或小于1时，强制为1
     if (!`${inputNum}`.trim() || inputNum < 1) {
-      this.setState({
-        num: 1,
-      });
+      // this.setState({
+      //   num: 1,
+      // });
       return;
     }
     var numValid = parseInt(inputNum);
-    this.setState({
-      num: numValid,
-    });
+    // this.setState({
+    //   num: numValid,
+    // });
     Toast.show("购物车更新成功！");
   };
   onEdit = () => {
@@ -35,29 +33,39 @@ export class Goods extends Component {
     });
   };
   addGoods = () => {
-    this.setState({
-      num: Number(this.state.num) + 1,
-    });
+    // this.setState({
+    //   num: Number(this.state.num) + 1,
+    // });
     Toast.show("购物车更新成功！");
   };
   reduceGoods = () => {
-    this.setState({
-      num: this.state.num - 1,
-    });
+    // this.setState({
+    //   num: this.state.num - 1,
+    // });
     Toast.show({
       content: "购物车更新成功",
     });
   };
   attrRender(attr) {
-    console.log(attr);
     let showText = "";
     for (let i = 0; i < attr.length; i++) {
       showText += `${attr[i].sAttrName}: ${attr[i].sAttrValue} `;
     }
     return showText;
   }
-  onClickSelect(sGoodsId) {
-    console.log('select singe',sGoodsId)
+  onClickSelect(selectICartId) {
+    const { selectGoodsArray } = store.getState().shopCar;
+    let newSelectGoodsArray = [];
+    if(selectGoodsArray.includes(selectICartId)) {
+      // 如果商品为选中状态，就取消选中
+      newSelectGoodsArray= selectGoodsArray.filter((item)=> {
+        return item != selectICartId;
+      })
+    } else {
+      // 如果商品为未选中状态，就设置选中
+      newSelectGoodsArray = [...selectGoodsArray,selectICartId]
+    }
+    store.dispatch(selectOrCancelGood(newSelectGoodsArray));
   }
   render() {
     const {
@@ -69,16 +77,17 @@ export class Goods extends Component {
       isPromote,
       activeDesc,
       attr,
-    } = this.state.good;
+    } = this.props.goodsInfo;
+    const { total, maxBuyNum, isCheck, iCartId} = this.props; 
     return (
       <ItemOrder>
         {/* 商品 */}
         <div className="order-good">
           <div className="good-item">
-            <span className="btn-check" onClick={this.onClickSelect.bind(this,sGoodsId)}>
+            <span className="btn-check" onClick={this.onClickSelect.bind(this,iCartId)}>
               <i
                 className={`ico-mall i-check ${
-                  this.state.isCheck ? "i-checked" : ""
+                  isCheck ? "i-checked" : ""
                 }`}
               ></i>
             </span>
@@ -117,7 +126,7 @@ export class Goods extends Component {
                   <input
                     type="number"
                     className="amount-text"
-                    value={this.state.num}
+                    value={total}
                     onChange={(e) => {
                       this.setState({
                         num: e.target.value,
@@ -150,7 +159,7 @@ export class Goods extends Component {
                   <input
                     type="number"
                     className="amount-text"
-                    value={this.state.num}
+                    value={total}
                     onChange={(e) => {
                       this.setState({
                         num: e.target.value,

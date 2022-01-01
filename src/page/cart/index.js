@@ -1,24 +1,27 @@
 import React, { Component } from "react";
-import { Stepper, Toast } from "antd-mobile";
+import { Toast } from "antd-mobile";
+import { connect } from "react-redux";
+import store from "../../store/index";
 import NoGoods from "./component/noGoods/index";
 import GoodDemo from "../../components/GoodDemo/index";
 import { CartPagewrap, CartListCss, CartBtnbox, CartRecommend } from "./style";
 import { Goods } from "./component/goods/index";
+import { selectOrCancelGood, updateCart, revisedTotalPrice } from "./actions";
 import { a, recommendGoods } from "./const";
 class Cart extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      cartList: [],
       recommendGoodsList: [],
     };
-    this.onClickAll = this.onClickAll.bind(this)
+    this.onClickAll = this.onClickAll.bind(this);
   }
   componentDidMount() {
     if (a.success) {
-      this.setState({
-        cartList: a.data,
-      });
+      // this.setState({
+      //   cartList: a.data,
+      // });
+      store.dispatch(updateCart(a.data));
     }
     if (recommendGoods.success) {
       this.setState({
@@ -27,12 +30,24 @@ class Cart extends Component {
     }
   }
   onClickAll() {
-    console.log('select all')
+    var { cartList, selectGoodsArray } = this.props;
+    // 获取购物车商品的长度，跟redux选中set的长度判断
+    if (cartList.length == selectGoodsArray.length) {
+      // 如果两者相同，说明商品是全部选中状态，就要设置全部未选中
+      store.dispatch(selectOrCancelGood([]));
+    } else {
+      // 如果两者相同，说明商品是还没全部选中，就要设置全部选中
+      const newSelectGoodsArray = cartList.map((item) => { 
+        return item.iCartId; 
+    }) ;
+      store.dispatch(selectOrCancelGood(newSelectGoodsArray));
+    }
   }
   render() {
-    // if (this.state.goodlist.length == 0) {
-    //   return <NoGoods></NoGoods>;
-    // }
+    const { cartList, goodsTotalPrice, selectGoodsArray } = this.props;
+    if (!this.props.cartList || this.props.cartList.length == 0) {
+      return <NoGoods></NoGoods>;
+    }
     return (
       <CartPagewrap>
         <CartListCss>
@@ -40,7 +55,11 @@ class Cart extends Component {
             {/* 商家 */}
             <div className="item-hd">
               <span className="btn-check" onClick={this.onClickAll}>
-                <i className="ico-mall i-check i-checked"></i>
+                <i
+                  className={`ico-mall i-check ${
+                    cartList.length == selectGoodsArray.length ? "i-checked" : ""
+                  }`}
+                ></i>
               </span>
               <div className="item-hdimg">
                 <img
@@ -54,30 +73,36 @@ class Cart extends Component {
               </p>
             </div>
             {/* 商品 */}
-            {this.state.cartList.map((item) => {
-              return (
-                <Goods
-                  key={item.iCartId}
-                  sGoodsId={item.sGoodsId}
-                  total={item.iTotal}
-                  maxBuyNum={item.maxNum}
-                  goodsInfo={item.goodsInfo}
-                  isCheck={true}
-                ></Goods>
-              );
-            })}
+            {cartList &&
+              cartList.map((item) => {
+                return (
+                  <Goods
+                    key={item.iCartId}
+                    iCartId={item.iCartId}
+                    sGoodsId={item.sGoodsId}
+                    total={item.iTotal}
+                    maxBuyNum={item.maxNum}
+                    goodsInfo={item.goodsInfo}
+                    isCheck={selectGoodsArray.includes(item.iCartId)}
+                  ></Goods>
+                );
+              })}
             {/* 结算 */}
             <CartBtnbox>
               <div className="balance">
                 <span className="btn-check" onClick={this.onClickAll}>
-                  <i className="ico-mall i-check"></i>
+                  <i
+                    className={`ico-mall i-check ${
+                      cartList.length == selectGoodsArray.length ? "i-checked" : ""
+                    }`}
+                  ></i>
                 </span>
                 <p className="bal-txt">全选</p>
                 <div className="totalpri">
                   <p className="pri">
                     合计：
                     <span className="red">
-                      <strong>¥ 168.00</strong>
+                      <strong>¥ {goodsTotalPrice}</strong>
                     </span>
                   </p>
                   <p className="pritip">不含运费</p>
@@ -114,4 +139,13 @@ class Cart extends Component {
   }
 }
 
-export default Cart;
+const mapStateToProps = (state) => {
+  return {
+    cartList: state.shopCar.cartList,
+    goodsTotalPrice: state.shopCar.goodsTotalPrice,
+    selectGoodsArray: state.shopCar.selectGoodsArray,
+  };
+};
+// Cart = connect(mapStateToProps)(Cart)
+// export default Cart;
+export default connect(mapStateToProps)(Cart);

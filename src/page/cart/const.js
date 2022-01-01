@@ -6,6 +6,7 @@ export const a = {
       iCartId: "63095",
       iTotal: "1",
       maxNum: "200",
+      sGoodsId: "21554",
       goodsInfo: {
         sGoodsId: "21554",
         iStatus: "1",
@@ -30,6 +31,7 @@ export const a = {
       iCartId: "63131",
       iTotal: "1",
       maxNum: "200",
+      sGoodsId: "21551",
       goodsInfo: {
         sGoodsId: "21551",
         iStatus: "1",
@@ -54,6 +56,7 @@ export const a = {
       iCartId: "6305",
       iTotal: "5",
       maxNum: "20",
+      sGoodsId: "13855",
       goodsInfo: {
         sGoodsId: "13855",
         iStatus: "1",

@@ -1,7 +1,5 @@
 import styled from "styled-components";
 
-
-
 // 购物车页面
 export const CartPagewrap = styled.div`
   height: 100%;
@@ -113,6 +111,10 @@ export const CartBtnbox = styled.div`
         width: 5.33vw;
         height: 5.33vw;
         background-position: -57.375vw -16.375vw;
+      }
+      .i-check.i-checked {
+        width: 5.6vw;
+        background-position: -77.625vw -16.125vw;
       }
     }
     .bal-txt {

@@ -3,23 +3,45 @@ import {
   REVISED_TOTAL_PRICE,
   DELETE_GOOD,
   UPDATE_GOOD,
+  UPDATE_CART,
 } from "./actions";
 // 初始状态
 const initState = {
-  selectGoodsSet: new Set(),
+  cartList: [],
+  selectGoodsArray: [],
   goodsTotalPrice: 0,
 };
-function shopCarReducer(state = initState, action) {
-  console.log("initState", state);
+function reducer(state = initState, action) {
   switch (action.type) {
-    case SELECTED_GOOD:
-      console.log("目前的数据是", action.newlist);
+    case UPDATE_CART:
+      console.log("action.payload.cartList", action.payload.cartList);
       return {
         ...state,
-        tablelist: [...state.tablelist, action.newlist],
+        cartList: action.payload.cartList,
+      };
+    case SELECTED_GOOD:
+      console.log(' action.payload.selectGoodsList', action.payload.selectGoodsList)
+      return {
+        ...state,
+        selectGoodsArray: action.payload.selectGoodsList,
+      };
+    case REVISED_TOTAL_PRICE:
+      return {
+        ...state,
+        goodsTotalPrice: action.newTotalPrice,
+      };
+    case DELETE_GOOD:
+      return {
+        ...state,
+        tablelist: [...state.tablelist, action.payload.s],
+      };
+    case UPDATE_GOOD:
+      return {
+        ...state,
+        tablelist: [...state.tablelist, action.payload.s],
       };
     default:
       return state;
   }
 }
-export default shopCarReducer;
+export default reducer;

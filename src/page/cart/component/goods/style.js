@@ -306,7 +306,7 @@ export const ItemOrder = styled.div`
         position: relative;
         display: flex;
         justify-content: center;
-        a {
+        span {
           position: absolute;
           top: -3.07vw;
           right: 0;
@@ -319,7 +319,7 @@ export const ItemOrder = styled.div`
           color: #fff;
           background: #ff433a;
         }
-        a.btn-finish {
+        span.btn-finish {
           right: 13.33vw;
           background: #ffd54f;
           color: #333;
