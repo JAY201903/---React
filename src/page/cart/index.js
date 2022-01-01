@@ -6,7 +6,7 @@ import NoGoods from "./component/noGoods/index";
 import GoodDemo from "../../components/GoodDemo/index";
 import { CartPagewrap, CartListCss, CartBtnbox, CartRecommend } from "./style";
 import { Goods } from "./component/goods/index";
-import { selectOrCancelGood, updateCart, revisedTotalPrice } from "./actions";
+import { selectOrCancelGood, updateCart } from "./actions";
 import { a, recommendGoods } from "./const";
 class Cart extends Component {
   constructor(props) {

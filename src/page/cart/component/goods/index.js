@@ -1,16 +1,18 @@
 import React, { Component } from "react";
 import { ItemOrder } from "./style";
 import { Stepper, Toast } from "antd-mobile";
-import store  from '../../../../store/index';
-import {selectOrCancelGood} from '../../actions'
+import store from "../../../../store/index";
+import { selectOrCancelGood,updateGoodAmount } from "../../actions";
+import { calculateTotalPrice } from "../../util";
 export class Goods extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isShowEdit: false,
     };
-    this.onClickSelect = this.onClickSelect.bind(this)
-    this.attrRender = this.attrRender.bind(this)
+    this.onClickSelect = this.onClickSelect.bind(this);
+    this.attrRender = this.attrRender.bind(this);
+    this.addGoods = this.addGoods.bind(this);
   }
   numOnblur = () => {
     var inputNum = this.state.num;
@@ -33,15 +35,15 @@ export class Goods extends Component {
     });
   };
   addGoods = () => {
-    // this.setState({
-    //   num: Number(this.state.num) + 1,
-    // });
+    const { total,iCartId } = this.props;
+    const newTotal = Number(total) + 1;
+    store.dispatch(updateGoodAmount(iCartId,newTotal));
     Toast.show("购物车更新成功！");
   };
   reduceGoods = () => {
-    // this.setState({
-    //   num: this.state.num - 1,
-    // });
+    const { total,iCartId } = this.props;
+    const newTotal = Number(total) - 1;
+    store.dispatch(updateGoodAmount(iCartId,newTotal));
     Toast.show({
       content: "购物车更新成功",
     });
@@ -55,15 +57,18 @@ export class Goods extends Component {
   }
   onClickSelect(selectICartId) {
     const { selectGoodsArray } = store.getState().shopCar;
+    const { total, goodsInfo } = this.props;
     let newSelectGoodsArray = [];
-    if(selectGoodsArray.includes(selectICartId)) {
+    if (selectGoodsArray.includes(selectICartId)) {
       // 如果商品为选中状态，就取消选中
-      newSelectGoodsArray= selectGoodsArray.filter((item)=> {
+      calculateTotalPrice(goodsInfo.iCurrPrice, total, 0);
+      newSelectGoodsArray = selectGoodsArray.filter((item) => {
         return item != selectICartId;
-      })
+      });
     } else {
       // 如果商品为未选中状态，就设置选中
-      newSelectGoodsArray = [...selectGoodsArray,selectICartId]
+      newSelectGoodsArray = [...selectGoodsArray, selectICartId];
+      calculateTotalPrice(goodsInfo.iCurrPrice, total, 1);
     }
     store.dispatch(selectOrCancelGood(newSelectGoodsArray));
   }
@@ -78,17 +83,18 @@ export class Goods extends Component {
       activeDesc,
       attr,
     } = this.props.goodsInfo;
-    const { total, maxBuyNum, isCheck, iCartId} = this.props; 
+    const { total, maxBuyNum, isCheck, iCartId } = this.props;
     return (
       <ItemOrder>
         {/* 商品 */}
         <div className="order-good">
           <div className="good-item">
-            <span className="btn-check" onClick={this.onClickSelect.bind(this,iCartId)}>
+            <span
+              className="btn-check"
+              onClick={this.onClickSelect.bind(this, iCartId)}
+            >
               <i
-                className={`ico-mall i-check ${
-                  isCheck ? "i-checked" : ""
-                }`}
+                className={`ico-mall i-check ${isCheck ? "i-checked" : ""}`}
               ></i>
             </span>
             <div className="good-img">
@@ -100,9 +106,7 @@ export class Goods extends Component {
               }`}
             >
               <div className="info-hd">
-                <span className="info-name">
-                  {sMallName}
-                </span>
+                <span className="info-name">{sMallName}</span>
                 <span className="ico-mall btn-edit" onClick={this.onEdit}>
                   编写
                 </span>
@@ -112,7 +116,7 @@ export class Goods extends Component {
               {/* 商品价格 */}
               <div className="info-bd">
                 <div className="info-price">
-                  <h4>¥ {iCurrPrice}</h4>
+                  <h4>¥ {iCurrPrice.toFixed(2)}</h4>
                   {isPromote ? <i className="i-primark">特价</i> : ""}
                 </div>
                 <div className="amount-counter">
@@ -135,7 +139,11 @@ export class Goods extends Component {
                     }}
                     onBlur={this.numOnblur}
                   />
-                  <span title="+" className="amount-plus" onClick={this.addGoods}>
+                  <span
+                    title="+"
+                    className="amount-plus"
+                    onClick={this.addGoods}
+                  >
                     +
                   </span>
                 </div>
@@ -168,7 +176,11 @@ export class Goods extends Component {
                     }}
                     onBlur={this.numOnblur}
                   />
-                  <span title="+" className="amount-plus" onClick={this.addGoods}>
+                  <span
+                    title="+"
+                    className="amount-plus"
+                    onClick={this.addGoods}
+                  >
                     +
                   </span>
                 </div>

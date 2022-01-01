@@ -2,7 +2,7 @@ import {
   SELECTED_GOOD,
   REVISED_TOTAL_PRICE,
   DELETE_GOOD,
-  UPDATE_GOOD,
+  UPDATE_GOOD_AMOUNT,
   UPDATE_CART,
 } from "./actions";
 // 初始状态
@@ -14,13 +14,11 @@ const initState = {
 function reducer(state = initState, action) {
   switch (action.type) {
     case UPDATE_CART:
-      console.log("action.payload.cartList", action.payload.cartList);
       return {
         ...state,
         cartList: action.payload.cartList,
       };
     case SELECTED_GOOD:
-      console.log(' action.payload.selectGoodsList', action.payload.selectGoodsList)
       return {
         ...state,
         selectGoodsArray: action.payload.selectGoodsList,
@@ -28,17 +26,22 @@ function reducer(state = initState, action) {
     case REVISED_TOTAL_PRICE:
       return {
         ...state,
-        goodsTotalPrice: action.newTotalPrice,
+        goodsTotalPrice: action.payload.newTotalPrice,
       };
     case DELETE_GOOD:
       return {
         ...state,
         tablelist: [...state.tablelist, action.payload.s],
       };
-    case UPDATE_GOOD:
+    case UPDATE_GOOD_AMOUNT:
       return {
         ...state,
-        tablelist: [...state.tablelist, action.payload.s],
+        cartList: state.cartList.map((item)=> {
+          if(item.iCartId == action.payload.iCartId) {
+            item.iTotal = action.payload.amount;
+          }
+          return item;
+        }),
       };
     default:
       return state;

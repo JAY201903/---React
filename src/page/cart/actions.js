@@ -4,8 +4,8 @@ export const SELECTED_GOOD = "SELECTED_GOOD";
 export const REVISED_TOTAL_PRICE = "REVISED_TOTAL_PRICE";
 // 删除商品
 export const DELETE_GOOD = "DELETE_GOOD";
-// 修改商品
-export const UPDATE_GOOD = "UPDATE_GOOD";
+// 修改商品数量
+export const UPDATE_GOOD_AMOUNT = "UPDATE_GOOD_AMOUNT";
 // 更新购物车
 export const UPDATE_CART = "UPDATE_CART";
 
@@ -35,11 +35,12 @@ export function deteleGood(goodId) {
   };
 }
 
-export function updateGood(goodId) {
+export function updateGoodAmount(iCartId,total) {
   return {
-    type: UPDATE_GOOD,
+    type: UPDATE_GOOD_AMOUNT,
     payload: {
-      goodId,
+      iCartId,
+      amount: total
     },
   };
 }

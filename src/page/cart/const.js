@@ -13,7 +13,7 @@ export const a = {
         sMallName: "Anker安克联名-弯头Type-C快充数据线",
         sProfileImg:
           "https://game.gtimg.cn/images/zb/x5/uploadImg/goods/202110/20211027160430_17359.jpg",
-        iCurrPrice: 6900,
+        iCurrPrice: 69.00,
         isPromote: true,
         activeDesc: "秒杀中，2小时后结束",
         attr: [
@@ -38,7 +38,7 @@ export const a = {
         sMallName: "Anker安克联名-65W快充充电器 亚索款",
         sProfileImg:
           "https://game.gtimg.cn/images/zb/x5/uploadImg/goods/202110/20211027155147_58825.jpg",
-        iCurrPrice: 17500,
+        iCurrPrice: 17.50,
         isPromote: true,
         activeDesc: "秒杀中，2小时后结束",
         attr: [
@@ -63,7 +63,7 @@ export const a = {
         sMallName: "2020 L Logo T恤",
         sProfileImg:
           "https://game.gtimg.cn/images/zb/x5/uploadImg/goods/202005/20200522205115_40806.jpg",
-        iCurrPrice: 16800,
+        iCurrPrice: 168.00,
         isPromote: false,
         activeDesc: "",
         attr: [
