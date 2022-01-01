@@ -29,9 +29,12 @@ function reducer(state = initState, action) {
         goodsTotalPrice: action.payload.newTotalPrice,
       };
     case DELETE_GOOD:
+      console.log('reducer',action.payload)
       return {
         ...state,
-        tablelist: [...state.tablelist, action.payload.s],
+        cartList: state.cartList.filter((item)=> {
+          return item.iCartId != action.payload.iCartId;
+        }),
       };
     case UPDATE_GOOD_AMOUNT:
       return {

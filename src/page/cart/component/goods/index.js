@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { ItemOrder } from "./style";
 import { Stepper, Toast } from "antd-mobile";
 import store from "../../../../store/index";
-import { selectOrCancelGood,updateGoodAmount } from "../../actions";
+import { selectOrCancelGood,updateGoodAmount,deteleCartGood } from "../../actions";
 import { calculateTotalPrice } from "../../util";
 export class Goods extends Component {
   constructor(props) {
@@ -13,6 +13,7 @@ export class Goods extends Component {
     this.onClickSelect = this.onClickSelect.bind(this);
     this.attrRender = this.attrRender.bind(this);
     this.addGoods = this.addGoods.bind(this);
+    this.deletGood = this.deletGood.bind(this);
   }
   numOnblur = () => {
     var inputNum = this.state.num;
@@ -34,12 +35,14 @@ export class Goods extends Component {
       isShowEdit: !this.state.isShowEdit,
     });
   };
-  addGoods = () => {
+  // 添加商品数量
+  addGoods() {
     const { total,iCartId } = this.props;
     const newTotal = Number(total) + 1;
     store.dispatch(updateGoodAmount(iCartId,newTotal));
     Toast.show("购物车更新成功！");
   };
+  // 减少商品数量
   reduceGoods = () => {
     const { total,iCartId } = this.props;
     const newTotal = Number(total) - 1;
@@ -48,6 +51,12 @@ export class Goods extends Component {
       content: "购物车更新成功",
     });
   };
+  // 删除商品
+  deletGood() {
+    console.log('shuchu ');
+    const { iCartId } = this.props;
+    store.dispatch(deteleCartGood(Number(iCartId)));
+  }
   attrRender(attr) {
     let showText = "";
     for (let i = 0; i < attr.length; i++) {
@@ -55,6 +64,7 @@ export class Goods extends Component {
     }
     return showText;
   }
+  // 单选与反选
   onClickSelect(selectICartId) {
     const { selectGoodsArray } = store.getState().shopCar;
     const { total, goodsInfo } = this.props;
@@ -195,7 +205,7 @@ export class Goods extends Component {
                 <span title="完成" className="btn-finish" onClick={this.onEdit}>
                   完成
                 </span>
-                <span title="删除" className="btn-del">
+                <span title="删除" className="btn-del" onClick={this.deletGood}>
                   删除
                 </span>
               </div>

@@ -26,11 +26,11 @@ export function revisedTotalPrice(newTotalPrice) {
   };
 }
 
-export function deteleGood(goodId) {
+export function deteleCartGood(iCartId) {
   return {
     type: DELETE_GOOD,
     payload: {
-      goodId,
+      iCartId,
     },
   };
 }
