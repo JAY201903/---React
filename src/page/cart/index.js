@@ -8,6 +8,7 @@ import { CartPagewrap, CartListCss, CartBtnbox, CartRecommend } from "./style";
 import { Goods } from "./component/goods/index";
 import { selectOrCancelGood, updateCart } from "./actions";
 import { a, recommendGoods } from "./const";
+import { anewCalculateTotalPrice } from "./util";
 class Cart extends Component {
   constructor(props) {
     super(props);
@@ -36,12 +37,13 @@ class Cart extends Component {
       // 如果两者相同，说明商品是全部选中状态，就要设置全部未选中
       store.dispatch(selectOrCancelGood([]));
     } else {
-      // 如果两者相同，说明商品是还没全部选中，就要设置全部选中
-      const newSelectGoodsArray = cartList.map((item) => { 
-        return item.iCartId; 
-    }) ;
+      // 如果两者相同，说明商品还没全部选中，就要设置全部选中
+      const newSelectGoodsArray = cartList.map((item) => {
+        return item.iCartId;
+      });
       store.dispatch(selectOrCancelGood(newSelectGoodsArray));
     }
+    anewCalculateTotalPrice();
   }
   render() {
     const { cartList, goodsTotalPrice, selectGoodsArray } = this.props;
@@ -57,7 +59,9 @@ class Cart extends Component {
               <span className="btn-check" onClick={this.onClickAll}>
                 <i
                   className={`ico-mall i-check ${
-                    cartList.length == selectGoodsArray.length ? "i-checked" : ""
+                    cartList.length == selectGoodsArray.length
+                      ? "i-checked"
+                      : ""
                   }`}
                 ></i>
               </span>
@@ -93,7 +97,9 @@ class Cart extends Component {
                 <span className="btn-check" onClick={this.onClickAll}>
                   <i
                     className={`ico-mall i-check ${
-                      cartList.length == selectGoodsArray.length ? "i-checked" : ""
+                      cartList.length == selectGoodsArray.length
+                        ? "i-checked"
+                        : ""
                     }`}
                   ></i>
                 </span>

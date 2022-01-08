@@ -3,32 +3,50 @@ import { ItemOrder } from "./style";
 import { Stepper, Toast } from "antd-mobile";
 import store from "../../../../store/index";
 import { selectOrCancelGood,updateGoodAmount,deteleCartGood } from "../../actions";
-import { calculateTotalPrice } from "../../util";
+import { calculateTotalPrice,anewCalculateTotalPrice } from "../../util";
 export class Goods extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isShowEdit: false,
+      goodQty: 0,
     };
     this.onClickSelect = this.onClickSelect.bind(this);
     this.attrRender = this.attrRender.bind(this);
     this.addGoods = this.addGoods.bind(this);
     this.deletGood = this.deletGood.bind(this);
   }
-  numOnblur = () => {
-    var inputNum = this.state.num;
+  componentWillMount(){
+    const { total } = this.props;
+    this.setState({
+      goodQty: total
+    })
+  }
+  onblur = () => {
+    var inputNum = this.state.goodQty;
+    const { iCartId } = this.props;
     // 输入空值或空字符串或小于1时，强制为1
     if (!`${inputNum}`.trim() || inputNum < 1) {
-      // this.setState({
-      //   num: 1,
-      // });
+      Toast.show({
+        content: "商品数量最小为1哦",
+        duration: 500,
+      });
+      this.setState({
+        goodQty: 1
+      })
+      store.dispatch(updateGoodAmount(iCartId,1));
       return;
     }
-    var numValid = parseInt(inputNum);
-    // this.setState({
-    //   num: numValid,
-    // });
-    Toast.show("购物车更新成功！");
+    var newTotal = parseInt(inputNum);
+    this.setState({
+      goodQty: newTotal
+    })
+    store.dispatch(updateGoodAmount(iCartId,newTotal));
+    anewCalculateTotalPrice();
+    Toast.show({
+      content: "购物车更新成功！",
+      duration: 500,
+    });
   };
   onEdit = () => {
     this.setState({
@@ -37,26 +55,45 @@ export class Goods extends Component {
   };
   // 添加商品数量
   addGoods() {
-    const { total,iCartId } = this.props;
-    const newTotal = Number(total) + 1;
+    const { isCheck,iCartId,goodsInfo } = this.props;
+    const newTotal = Number(this.state.goodQty) + 1;
+    this.setState({
+      goodQty: newTotal
+    })
     store.dispatch(updateGoodAmount(iCartId,newTotal));
-    Toast.show("购物车更新成功！");
+    calculateTotalPrice(isCheck,goodsInfo.iCurrPrice, 1, 1);
+    Toast.show({
+      content: "购物车更新成功！",
+      duration: 500,
+    });
   };
   // 减少商品数量
   reduceGoods = () => {
-    const { total,iCartId } = this.props;
-    const newTotal = Number(total) - 1;
+    const { isCheck,iCartId,goodsInfo } = this.props;
+    if(this.state.goodQty == 1) {
+      Toast.show({
+        content: "商品数量最小为1哦",
+        duration: 500,
+      });
+      return;
+    }
+    const newTotal = Number(this.state.goodQty) - 1;
     store.dispatch(updateGoodAmount(iCartId,newTotal));
+    this.setState({
+      goodQty: newTotal
+    })
+    calculateTotalPrice(isCheck,goodsInfo.iCurrPrice, 1, 0);
     Toast.show({
-      content: "购物车更新成功",
+      content: "购物车更新成功！",
+      duration: 500,
     });
   };
   // 删除商品
   deletGood() {
-    console.log('shuchu ');
     const { iCartId } = this.props;
     store.dispatch(deteleCartGood(Number(iCartId)));
   }
+  // 属性渲染
   attrRender(attr) {
     let showText = "";
     for (let i = 0; i < attr.length; i++) {
@@ -67,18 +104,18 @@ export class Goods extends Component {
   // 单选与反选
   onClickSelect(selectICartId) {
     const { selectGoodsArray } = store.getState().shopCar;
-    const { total, goodsInfo } = this.props;
+    const { goodsInfo } = this.props;
     let newSelectGoodsArray = [];
     if (selectGoodsArray.includes(selectICartId)) {
       // 如果商品为选中状态，就取消选中
-      calculateTotalPrice(goodsInfo.iCurrPrice, total, 0);
+      calculateTotalPrice(true,goodsInfo.iCurrPrice, this.state.goodQty, 0);
       newSelectGoodsArray = selectGoodsArray.filter((item) => {
         return item != selectICartId;
       });
     } else {
       // 如果商品为未选中状态，就设置选中
       newSelectGoodsArray = [...selectGoodsArray, selectICartId];
-      calculateTotalPrice(goodsInfo.iCurrPrice, total, 1);
+      calculateTotalPrice(true,goodsInfo.iCurrPrice, this.state.goodQty, 1);
     }
     store.dispatch(selectOrCancelGood(newSelectGoodsArray));
   }
@@ -93,7 +130,7 @@ export class Goods extends Component {
       activeDesc,
       attr,
     } = this.props.goodsInfo;
-    const { total, maxBuyNum, isCheck, iCartId } = this.props;
+    const { maxBuyNum, isCheck, iCartId } = this.props;
     return (
       <ItemOrder>
         {/* 商品 */}
@@ -138,16 +175,18 @@ export class Goods extends Component {
                     -
                   </span>
                   <input
-                    type="number"
+                    type="text"
                     className="amount-text"
-                    value={total}
+                    value={this.state.goodQty}
                     onChange={(e) => {
-                      this.setState({
-                        num: e.target.value,
-                      });
-                      console.log(e.target.value);
+                      var reg = /^[0-9]*$/;
+                      if(reg.test(e.target.value)) {
+                        this.setState({
+                          goodQty: e.target.value,
+                        });
+                      }
                     }}
-                    onBlur={this.numOnblur}
+                    onBlur={this.onblur}
                   />
                   <span
                     title="+"
@@ -177,14 +216,16 @@ export class Goods extends Component {
                   <input
                     type="number"
                     className="amount-text"
-                    value={total}
+                    value={this.state.goodQty}
                     onChange={(e) => {
-                      this.setState({
-                        num: e.target.value,
-                      });
-                      console.log(e.target.value);
+                      var reg = /^[0-9]*$/;
+                      if(reg.test(e.target.value)) {
+                        this.setState({
+                          goodQty: e.target.value,
+                        });
+                      }
                     }}
-                    onBlur={this.numOnblur}
+                    onBlur={this.onblur}
                   />
                   <span
                     title="+"
