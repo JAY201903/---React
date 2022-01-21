@@ -11,10 +11,12 @@ export class Goods extends Component {
       isShowEdit: false,
       goodQty: 0,
     };
+    console.log('props',props)
     this.onClickSelect = this.onClickSelect.bind(this);
     this.attrRender = this.attrRender.bind(this);
     this.addGoods = this.addGoods.bind(this);
     this.deletGood = this.deletGood.bind(this);
+    this.modifyAttr = this.modifyAttr.bind(this);
   }
   componentWillMount(){
     const { total } = this.props;
@@ -118,6 +120,15 @@ export class Goods extends Component {
       calculateTotalPrice(true,goodsInfo.iCurrPrice, this.state.goodQty, 1);
     }
     store.dispatch(selectOrCancelGood(newSelectGoodsArray));
+  }
+  // 修改商品的规格
+  modifyAttr(){
+    const {
+      sGoodsId,
+      attr,
+    } = this.props.goodsInfo;
+    console.log('修改商品规格',sGoodsId,attr)
+    this.props.expandAttrPopup();
   }
   render() {
     const {
@@ -236,7 +247,7 @@ export class Goods extends Component {
                   </span>
                 </div>
                 <div className="goods-edit">
-                  <div className="editbr">
+                  <div className="editbr" onClick={this.modifyAttr}>
                     <span>{this.attrRender(attr)}</span>
                     <i className="ico-mall i-arrdown"></i>
                   </div>

@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import store from "../../store/index";
 import NoGoods from "./component/noGoods/index";
 import GoodDemo from "../../components/GoodDemo/index";
+import {AttrPopup} from '../../components/AttrPopup/index'
 import { CartPagewrap, CartListCss, CartBtnbox, CartRecommend } from "./style";
 import { Goods } from "./component/goods/index";
 import { selectOrCancelGood, updateCart } from "./actions";
@@ -14,8 +15,10 @@ class Cart extends Component {
     super(props);
     this.state = {
       recommendGoodsList: [],
+      attrModalVisible:true,
     };
     this.onClickAll = this.onClickAll.bind(this);
+    this.expandAttrPopup = this.expandAttrPopup.bind(this);
   }
   componentDidMount() {
     if (a.success) {
@@ -44,6 +47,13 @@ class Cart extends Component {
       store.dispatch(selectOrCancelGood(newSelectGoodsArray));
     }
     anewCalculateTotalPrice();
+  }
+
+  // 属性弹出层控制
+  expandAttrPopup() {
+    this.setState({
+      attrModalVisible: !this.state.attrModalVisible,
+    });
   }
   render() {
     const { cartList, goodsTotalPrice, selectGoodsArray } = this.props;
@@ -88,6 +98,7 @@ class Cart extends Component {
                     maxBuyNum={item.maxNum}
                     goodsInfo={item.goodsInfo}
                     isCheck={selectGoodsArray.includes(item.iCartId)}
+                    expandAttrPopup={this.expandAttrPopup}
                   ></Goods>
                 );
               })}
@@ -140,6 +151,12 @@ class Cart extends Component {
             </ul>
           </div>
         </CartRecommend>
+        {/* 修改属性弹出框 */}
+        <AttrPopup
+          visible={this.state.attrModalVisible}
+          expandAttrPopup={this.expandAttrPopup}
+        >
+        </AttrPopup>
       </CartPagewrap>
     );
   }
